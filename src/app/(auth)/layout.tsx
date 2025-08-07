@@ -1,7 +1,13 @@
+"use client";
+
 import { ReactNode } from "react";
 import AuthContextProvider from "../../../contexts/authContext";
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+interface Props {
+  children: ReactNode;
+}
+
+export default function RootLayout({ children }: Props) {
   return (
     <AuthContextProvider>
       {children}
