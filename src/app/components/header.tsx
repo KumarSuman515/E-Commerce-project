@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { auth } from '../../../lib/firestore/firebase';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-
+import { FirebaseError } from 'firebase/app';
 
 const Navbar = () => {
   const router = useRouter();
@@ -15,8 +16,12 @@ const Navbar = () => {
       await signOut(auth);
       toast.success("Logged out successfully");
       router.push("/login");
-    } catch (error: any) {
-      toast.error(error?.message || "Logout failed");
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) {
+        toast.error(error.message);
+      } else {
+        toast.error("Logout failed");
+      }
     }
   };
 
@@ -32,7 +37,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         {/* Logo */}
         <Link href="/">
-          <img src="/logo.png" alt="Logo" className="h-10 cursor-pointer" />
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            width={40}
+            height={40}
+            className="cursor-pointer"
+          />
         </Link>
 
         {/* Desktop Menu */}

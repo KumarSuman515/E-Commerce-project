@@ -1,7 +1,9 @@
 "use client";
 
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 import Link from "next/link";
+import Image from "next/image";
 import toast from "react-hot-toast";
 import { auth } from "../../../../lib/firestore/firebase";
 import { useEffect } from "react";
@@ -23,7 +25,13 @@ export default function Page() {
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
         {/* Logo & Title */}
         <section className="flex flex-col items-center mb-6">
-          <img className="h-16 mb-4" src="/logo.png" alt="logo" />
+          <Image
+            src="/logo.png"
+            alt="logo"
+            width={64}
+            height={64}
+            className="mb-4"
+          />
           <h1 className="text-xl font-semibold" style={{ color: "#663300" }}>
             Login
           </h1>
@@ -96,15 +104,19 @@ function SignInWithGoogle() {
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({
-        prompt: "select_account", // ✅ This forces Google to show account selection
+        prompt: "select_account",
       });
 
-      const userCredential = await signInWithPopup(auth, provider); // ✅ use provider
+      const userCredential = await signInWithPopup(auth, provider);
       const user = userCredential.user;
       toast.success(`Welcome ${user.displayName || "User"}!`);
-      router.push("/dashboard"); // optional redirect
-    } catch (error: any) {
-      toast.error(error?.message || "Google sign-in failed");
+      router.push("/dashboard");
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) {
+        toast.error(error.message);
+      } else {
+        toast.error("Google sign-in failed");
+      }
     }
   };
 
