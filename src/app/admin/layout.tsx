@@ -1,10 +1,15 @@
 "use client"
-import sidebar from "./components/sidebar"
-export default function Layout(children){
+import Sidebar from "./components/sidebar"
+
+export default function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
     return (
 <main className="flex">
  <div>
-   <sidebar />
+   <Sidebar />
  </div>
     <section className="flex">{children}</section></main>
     )
