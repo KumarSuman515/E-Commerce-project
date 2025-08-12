@@ -16,7 +16,7 @@ export default function Page() {
 
   useEffect(() => {
     if (user) {
-      router.push("/dashboard");
+      router.push("/admin");
     }
   }, [user, router]);
 
@@ -72,7 +72,7 @@ export default function Page() {
         <div className="mt-4 text-sm text-center text-gray-600">
           <p>
             New?{" "}
-            <Link href="/signup" className="text-blue-700 hover:underline">
+            <Link href="/sign-up" className="text-blue-700 hover:underline">
               Create account
             </Link>
           </p>
@@ -110,7 +110,7 @@ function SignInWithGoogle() {
       const userCredential = await signInWithPopup(auth, provider);
       const user = userCredential.user;
       toast.success(`Welcome ${user.displayName || "User"}!`);
-      router.push("/dashboard");
+      router.push("/admin");
     } catch (error: unknown) {
       if (error instanceof FirebaseError) {
         toast.error(error.message);
